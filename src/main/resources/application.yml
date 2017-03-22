@@ -1,0 +1,10 @@
+# Development configuration
+---
+spring:
+  profiles: development
+
+# Production configuration
+---
+spring:
+  profiles: production
+

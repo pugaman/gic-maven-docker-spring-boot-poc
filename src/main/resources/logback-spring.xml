@@ -1,0 +1,50 @@
+<configuration>
+
+    <!--<springProfile name="production">-->
+
+        <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+            <!--<file>${catalina.base}/log/gic.log</file>-->
+            <!--<append>true</append>-->
+
+            <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+                <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
+                <!--<fileNamePattern>${catalina.base}/log/gic.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+                <!--&lt;!&ndash; keep 30 days' worth of history &ndash;&gt;-->
+                <!--<maxHistory>30</maxHistory>-->
+            <!--</rollingPolicy>-->
+
+            <!--<encoder>-->
+                <!--<pattern>%d{ISO8601} %p %t %c{0}.%M - %m%n</pattern>-->
+                <!--<charset>utf8</charset>-->
+            <!--</encoder>-->
+        <!--</appender>-->
+
+        <!--<root level="INFO">-->
+            <!--<appender-ref ref="FILE"/>-->
+        <!--</root>-->
+
+    <!--</springProfile>-->
+
+    <springProfile name="production">
+
+        <!-- put your appenders -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+            <encoder>
+                <pattern>%d{ISO8601} %p %t %c{0}.%M - %m%n</pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <logger name="com.gic" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <!-- put your root here -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>
