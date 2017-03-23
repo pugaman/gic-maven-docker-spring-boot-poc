@@ -32,6 +32,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <maven-docker-plugin-version>0.20.0</maven-docker-plugin-version>
+        <!--Docker properties for overriding during the build process-->
+        <docker.host>unix:///var/run/docker.sock</docker.host>
+        <docker.push.registry>lc-fins2-coe-ci.luxoft.com:8181</docker.push.registry>
+        <docker.push.username>pgolovenkov</docker.push.username>
+        <docker.push.password>Luxoft1237ujm</docker.push.password>
     </properties>
 
     <profiles>
@@ -63,15 +68,21 @@
                         <executions>
                             <execution>
                                 <id>copy-docker-resources</id>
-                                <phase>validate</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${basedir}/target</outputDirectory>
+                                    <outputDirectory>${basedir}/target/docker-build</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${basedir}/docker</directory>
+                                        </resource>
+                                        <resource>
+                                            <directory>${basedir}/target</directory>
+                                            <includes>
+                                                <include>${build.finalName}.${packaging}</include>
+                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -83,20 +94,12 @@
                         <artifactId>docker-maven-plugin</artifactId>
                         <version>${maven-docker-plugin-version}</version>
                         <configuration>
-                            <dockerHost>unix:///var/run/docker.sock</dockerHost>
-                            <pushRegistry>lc-fins2-coe-ci.luxoft.com:8181</pushRegistry>
-                            <authConfig>
-                                <push>
-                                    <username>pgolovenkov</username>
-                                    <password>Luxoft1237ujm</password>
-                                </push>
-                            </authConfig>
                             <skipRun>true</skipRun>
                             <images>
                                 <image>
-                                    <name>%g/gic-maven-docker-springboot-poc:%l</name>
+                                    <name>gic-maven-docker-springboot-poc:%l</name>
                                     <build>
-                                        <dockerFileDir>${project.basedir}/target</dockerFileDir>
+                                        <dockerFileDir>${project.basedir}/target/docker-build</dockerFileDir>
                                     </build>
                                 </image>
                             </images>
@@ -107,6 +110,12 @@
                                 <phase>install</phase>
                                 <goals>
                                     <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>docker-publish</id>
+                                <phase>deploy</phase>
+                                <goals>
                                     <goal>push</goal>
                                 </goals>
                             </execution>
