@@ -39,9 +39,9 @@
         <maven-docker-plugin-version>0.20.0</maven-docker-plugin-version>
         <!--Docker properties for overriding during the build process-->
         <docker.host>unix:///var/run/docker.sock</docker.host>
-        <docker.push.registry>lc-fins2-coe-ci.luxoft.com:8181</docker.push.registry>
-        <docker.push.username>pgolovenkov</docker.push.username>
-        <docker.push.password>Luxoft1237ujm</docker.push.password>
+        <docker.registry>lc-fins2-coe-repo.luxoft.com</docker.registry>
+        <docker.username>pgolovenkov</docker.username>
+        <docker.password>Luxoft1237ujm</docker.password>
     </properties>
 
     <profiles>
@@ -100,6 +100,11 @@
                         <version>${maven-docker-plugin-version}</version>
                         <configuration>
                             <skipRun>true</skipRun>
+                            <verbose>true</verbose>
+                            <authConfig>
+                                <username>pgolovenkov</username>
+                                <password>Luxoft1237ujm</password>
+                            </authConfig>
                             <images>
                                 <image>
                                     <name>gic-maven-docker-springboot-poc:%l</name>
